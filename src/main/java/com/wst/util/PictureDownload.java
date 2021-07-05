@@ -26,6 +26,7 @@ public class PictureDownload implements Runnable{
             myPath.mkdirs();
     }
 
+
     public void downLoad(){
         //创建文件夹
         createFolder(this.path);
@@ -35,13 +36,13 @@ public class PictureDownload implements Runnable{
             urlConnection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
             urlConnection.connect();
 
-            String filePath = this.path+"/"+System.currentTimeMillis()+".txt";
+            String filePath = this.path+"/"+System.currentTimeMillis()+".png";
 
             BufferedInputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
             BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(filePath));
             int len=0;
             byte[] buff = new byte[1024];
-            while ((inputStream.read(buff))!=-1){
+            while ((len=inputStream.read(buff))!=-1){
                 outputStream.write(buff,0,len);
             }
             outputStream.flush();
