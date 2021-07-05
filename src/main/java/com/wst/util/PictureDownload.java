@@ -1,7 +1,6 @@
 package com.wst.util;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -10,9 +9,9 @@ import java.net.URLConnection;
  */
 public class PictureDownload implements Runnable{
 
-//https://img03.sogoucdn.com/app/a/100520020/edce51b6fded8316f4568634a948bb71
     private String url;
     private String path;
+    private String name;
 
     public PictureDownload(String url, String path) {
         this.url = url;
