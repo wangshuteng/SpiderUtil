@@ -7,6 +7,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,11 @@ import java.util.List;
  * @author wangst
  * @date 2021/7/5
  */
+@Component
 public class PictureSpider {
+
+    @Autowired
+    private HttpUtil httpUtil;
 
     /**
      * 输入指定地址 url 保存到地址
@@ -38,11 +44,12 @@ public class PictureSpider {
      * @author wangst
      * @date 2021/7/5
      */
-    public static List<String> getAllPictureUrl(String url){
+    public List<String> getAllPictureUrl(String url){
         Document doc =null;
         List<String> lists = new ArrayList<>();
+
         try {
-            doc = Jsoup.parse(HttpUtil.get(url),"utf-8");
+            doc = Jsoup.parse(httpUtil.get(url),"utf-8");
         }catch (Exception e){
             System.out.println("获取网页连接错误！！");
             e.printStackTrace();
@@ -62,8 +69,6 @@ public class PictureSpider {
         return lists;
 
     }
-
-
 
 
 }

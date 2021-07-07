@@ -1,5 +1,8 @@
 package com.wst.util;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -13,30 +16,32 @@ public class PictureDownload implements Runnable{
     private String path;
     private String name;
 
+    @Autowired
+    private FileUtil fileUtil;
+
     public PictureDownload(String url, String path) {
         this.url = url;
         this.path = path;
     }
-
-    //检测路径是否存在，不存在则创建
-    private void createFolder(String path)
-    {
-        File myPath = new File(path);
-        if (!myPath.exists())   //不存在则创建文件夹
-            myPath.mkdirs();
+    public PictureDownload(String url, String path,String name) {
+        this.url = url;
+        this.path = path;
+        this.name = name;
     }
-
 
     public void downLoad(){
         //创建文件夹
-        createFolder(this.path);
+        fileUtil.createFolder(this.path);
         try {
             URL url = new URL(this.url);
             URLConnection urlConnection = url.openConnection();
             urlConnection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
             urlConnection.connect();
 
-            String filePath = this.path+"/"+System.currentTimeMillis()+".png";
+            if (this.name==null){
+                this.name = System.currentTimeMillis()+".png";
+            }
+            String filePath = this.path+"/"+this.name;
 
             BufferedInputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
             BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(filePath));
