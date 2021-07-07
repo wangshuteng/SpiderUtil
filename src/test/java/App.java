@@ -1,3 +1,6 @@
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.wst.spider.KugouSpider;
 import com.wst.spider.PictureSpider;
 import com.wst.util.HttpUtil;
 import com.wst.util.PictureDownload;
@@ -17,6 +20,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class App {
 
@@ -62,25 +67,82 @@ public class App {
         List<String> list = new ArrayList<>();
         HttpUtil httpUtil = new HttpUtil();
         Document doc = null;
-        String url ="https://www.kugou.com/song/#hash=0930C43952C442A194129D20F48182FC&album_id=40154991";
-//        String url ="https://www.baidu.com/";
+        String url ="https://www.kugou.com/song/1sxgnf41.html";
+//        String url ="https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery19103260561307019262_1625668049988&hash=D5E5641860B5BE111A9DF0ACD3AD7E3A&dfid=2T62ov0BDeNu3KFmwZ32R25O&mid=93cb60a3d4e8c16e8732c422483fbded&platid=4&album_id=45507535&_=1625668049990";
+//        String mstr = httpUtil.get(url);
+//        String hash = "";
+//        String regEx = "https:([\\S]*?).mp3";
+//        // 编译正则表达式
+//        Pattern pattern = Pattern.compile(regEx);
+//        Matcher matcher = pattern.matcher(mstr);
+//        if (matcher.find()) {
+//            hash = matcher.group();
+//            System.out.println(hash);
+//        }
+
+//
+//        String[] urls = s.split("play_backup_url");
+//        for (String a :
+//                urls) {
+//            if(a.contains("mp3")) {
+//                System.out.println(a);
+//            }
+//
+//        }
+
+
         try{
             doc= Jsoup.parse(httpUtil.get(url));
-//            doc = Jsoup.parse(new URL(url),3000);
-            System.out.println(doc);
         }catch (Exception e){
             System.out.println("获取网页连接错误！！");
             e.printStackTrace();
         }
-        Elements musicLinks=doc.select("audio[src]");
-        for (Element e :
-                musicLinks) {
-            String link = e.attr("src");
-            if(link.contains("http:")||link.contains("https:")) {
-                list.add(link);
-                System.out.println(link);
+
+        Elements script = doc.getElementsByTag("script");
+        doc.getElementsByClass("");
+
+        for (Element e : script) {
+            String[] vars = e.data().split("var");
+            for (String var :
+                    vars) {
+                if(var.contains("dataFromSmarty")){
+                    String dataFromSmarty=var.substring(var.indexOf("[")+1,var.indexOf("]"));
+                    System.out.println(dataFromSmarty);
+                    JSONObject parse = JSON.parseObject(dataFromSmarty);
+                    String hash = parse.getString("hash");
+                    String album_id = parse.getString("album_id");
+
+                }
             }
+
         }
+
+    }
+    @Test
+    public void fun3(){
+        String url = "https://www.kugou.com/yy/rank/home/1-6666.html?from=rank";
+        Document doc = null;
+        HttpUtil httpUtil = new HttpUtil();
+        try{
+            doc= Jsoup.parse(httpUtil.get(url));
+        }catch (Exception e){
+            System.out.println("获取网页连接错误！！");
+            e.printStackTrace();
+        }
+        Elements pc_temp_songname = doc.getElementsByClass("pc_temp_songname");
+        for (Element e :
+                pc_temp_songname) {
+            String link = e.attr("href");
+            String title = e.attr("title");
+            System.out.println(title+":"+link);
+        }
+    }
+    @Test
+    public void fun4(){
+        String url = "https://www.kugou.com/yy/rank/home/1-6666.html?from=rank";
+        KugouSpider kugouSpider = new KugouSpider();
+        kugouSpider.downLoadMusic();
+
     }
 
 }

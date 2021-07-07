@@ -14,8 +14,8 @@ public class FileDownload implements Runnable{
     private String path;
     private String name;
 
-    @Autowired
-    private FileUtil fileUtil;
+//    @Autowired
+//    private FileUtil fileUtil;
 
     public FileDownload(String url, String path) {
         this.url = url;
@@ -28,6 +28,7 @@ public class FileDownload implements Runnable{
     }
 
     public void downLoad(){
+        FileUtil fileUtil = new FileUtil();
         //创建文件夹
         fileUtil.createFolder(this.path);
         try {

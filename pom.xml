@@ -48,6 +48,14 @@
       <version>4.9.1</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson   json数据处理-->
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.73</version>
+    </dependency>
+
+
 
     <dependency>
       <groupId>junit</groupId>
