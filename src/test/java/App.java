@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import sun.security.timestamp.HttpTimestamper;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -143,6 +144,46 @@ public class App {
         KugouSpider kugouSpider = new KugouSpider();
         kugouSpider.downLoadMusic();
 
+    }
+    @Test
+    public void fun5(){
+        HttpUtil httpUtil = new HttpUtil();
+        String keyWord = "雪";
+        String url ="https://www.kugou.com/yy/html/search.html#searchType=song&searchKeyWord=雪"+keyWord;
+        String url2="https://searchrecommend.kugou.com/get/complex?callback=jQuery112409968025656871942_1625729486178&word=雪&_=1625729486180";
+        String url3="https://complexsearch.kugou.com/v2/search/song?callback=callback123&keyword=雪&page=1&pagesize=30&bitrate=0&isfuzzy=0&tag=em&inputtype=0&platform=WebFilter&userid=0&clientver=2000&iscorrection=1&privilege_filter=0&srcappid=2919&clienttime=1625732037821&mid=1625732037821&uuid=1625732037821&dfid=-&signature=4325B1FF2C9F63F221F62D2EF82D1E5C";
+        String url4="https://complexsearch.kugou.com/v2/search/song?callback=callback123&keyword=雪&page=1&pagesize=30&bitrate=0&isfuzzy=0&tag=em&inputtype=0&platform=WebFilter&userid=0&clientver=2000&iscorrection=1&privilege_filter=0&srcappid=2919&clienttime=1625733278418&mid=1625733278418&uuid=1625733278418&dfid=-&signature=1AF03CCC0FF12D10C4BF3757AB1C9D05";
+
+        System.out.println(url3);
+        Document doc = Jsoup.parse(httpUtil.get(url3));
+        System.out.println(doc);
+    }
+    @Test
+    public void fun6(){
+        HttpUtil httpUtil = new HttpUtil();
+        String musicUrl="";
+            String hash = "AA9CA20BE39C1310AB266B509788B8AC";
+//            String album_id = "39932747";
+            String album_id = "14462";
+            String codeUrl="https://wwwapi.kugou.com/yy/index.php?" +
+                    "r=play/getdata" +
+                    "&callback=jQuery19103260561307019262_1625668049988" +
+                    "&hash=" +hash+
+                    "&dfid=2T62ov0BDeNu3KFmwZ32R25O" +
+                    "&mid=93cb60a3d4e8c16e8732c422483fbded" +
+                    "&platid=4" +
+                    "&album_id=" +album_id +
+                    "&_=1625668049990";
+            String mstr = httpUtil.get(codeUrl);
+            System.out.println(mstr);
+            String regEx = "https:([\\S]*?).mp3";
+            // 编译正则表达式
+            Pattern pattern = Pattern.compile(regEx);
+            Matcher matcher = pattern.matcher(mstr);
+            if (matcher.find()) {
+                musicUrl = matcher.group();
+                System.out.println(musicUrl);
+            }
     }
 
 }
